@@ -2,7 +2,7 @@
   Icon = "./assets/icon.png"
   Name = "dcvix-stats"
   ID = "net.cortassa.dcvix-stats"
-  Version = "0.1.0"
+  Version = "0.2.0"
   Build = 1
 
 [Migrations]
