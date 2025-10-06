@@ -93,9 +93,12 @@ func (lp *LogParser) parseLine(line string) []LogEntry {
 	}
 
 	// convert UTC timestamp to local time
-	utcTime, _ := time.ParseInLocation("2006-01-02 15:04:05", timestampUTC, time.UTC)
+	utcTime, err := time.ParseInLocation("2006-01-02 15:04:05", timestampUTC, time.UTC)
+	if err != nil {
+		logger.LogVerbose("Error parsing timestamp: %v", err)
+		return nil
+	}
 	localTime := utcTime.Local()
-	// timestampLocalTime := localTime.Format("2006-01-02 15:04:05")
 	timestampLocalTime := localTime.Format("15:04:05")
 
 	lastValue, err := strconv.ParseFloat(lastValueStr, 64)
