@@ -8,6 +8,7 @@ package gui
 import (
 	"fmt"
 	"net/url"
+	"time"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -173,6 +174,7 @@ func NewMainWindow(a fyne.App) fyne.Window {
 		showMenuItems = append(showMenuItems, config.menuItem)
 	}
 
+	// Reload log file and redraw graphs
 	refresh := func() {
 		parser.ReadLogFile()
 		for _, config := range graphConfigs {
@@ -181,10 +183,62 @@ func NewMainWindow(a fyne.App) fyne.Window {
 		}
 	}
 
+	// Auto refresh ticker
+	var autoRefreshTicker *time.Ticker
+	var autoRefreshDone chan bool
+
+	startAutoRefresh := func() {
+		if autoRefreshTicker != nil {
+			return
+		}
+		autoRefreshTicker = time.NewTicker(30 * time.Second)
+		autoRefreshDone = make(chan bool)
+
+		go func() {
+			for {
+				select {
+				case <-autoRefreshTicker.C:
+					logger.LogVerbose("Refreshing\n")
+					refresh()
+				case <-autoRefreshDone:
+					return
+				}
+			}
+		}()
+	}
+
+	stopAutoRefresh := func() {
+		if autoRefreshTicker != nil {
+			autoRefreshTicker.Stop()
+			autoRefreshDone <- true
+			close(autoRefreshDone)
+			autoRefreshTicker = nil
+		}
+	}
+
+	autoRefreshItem := fyne.NewMenuItem("Auto Refresh", nil)
+	autoRefreshItem.Checked = false
+	autoRefreshItem.Action = func() {
+		autoRefreshItem.Checked = !autoRefreshItem.Checked
+		if autoRefreshItem.Checked {
+			startAutoRefresh()
+		} else {
+			stopAutoRefresh()
+		}
+		w.SetMainMenu(mainMenu)
+	}
+
+	// Window close handling
+	w.SetCloseIntercept(func() {
+		stopAutoRefresh()
+		w.Close()
+	})
+
 	// Menus
 	fileMenu := fyne.NewMenu("File",
 		fyne.NewMenuItem("About", showAbout),
 		fyne.NewMenuItem("Refresh", refresh),
+		autoRefreshItem,
 	)
 
 	showMenu := fyne.NewMenu("Show", showMenuItems...)
@@ -194,18 +248,6 @@ func NewMainWindow(a fyne.App) fyne.Window {
 	// Main container
 	w.SetContent(container.NewAdaptiveGrid(2, graphContainers...))
 
-	// go parser.Run()
-	// parser.Run()
 	return w
 
 }
-
-// ticker := time.NewTicker(30 * time.Second)
-// defer ticker.Stop()
-
-// for {
-// <-ticker.C
-// select {
-// case <-ticker.C:
-// 	// Continue to next iteration
-// }
