@@ -52,7 +52,6 @@ func NewChartView(metrics []string, values [][]float64, timeStamps []string) *Ch
 
 // Set a sane minimal size or the graph will be unreadable
 func (w *ChartView) MinSize() fyne.Size {
-	// return fyne.NewSize(512, 384)
 	return fyne.NewSize(minSizeW, minSizeH)
 }
 
@@ -68,7 +67,22 @@ func (c *ChartView) Resize(s fyne.Size) {
 
 // GenerateChart generate a chart image used by this widget.
 func (c *ChartView) GenerateChart(s fyne.Size) image.Image {
-	chartImageBuff := charts.Chart(c.metrics, c.values, c.timeStamps, s.Width, s.Height)
+	Width, Height := s.Width, s.Height
+
+	// Handle zero or very small dimensions
+	if s.Width <= 1 || s.Height <= 1 {
+		Width = 600
+		Height = 300 // sensible default 2:1 ratio
+	} else {
+		// Maintain aspect ratio while enforcing minimum width
+		if Width < 600 {
+			ratio := float32(s.Width) / float32(s.Height)
+			Width = 600
+			Height = Width / ratio
+		}
+	}
+
+	chartImageBuff := charts.Chart(c.metrics, c.values, c.timeStamps, Width, Height)
 	chartImageReader := bytes.NewReader(chartImageBuff)
 	chartImage, _, _ := image.Decode(chartImageReader)
 	return chartImage
@@ -85,7 +99,6 @@ func (c *ChartView) RefreshData(values [][]float64, timeStamps []string) {
 	c.values = values
 	c.timeStamps = timeStamps
 	c.img.Image = c.GenerateChart(c.Size())
-	c.Refresh()
 }
 
 // needRerender checks if chart image needs to be re-rendered for new widget size
