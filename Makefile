@@ -54,9 +54,22 @@ build-windows-cross:
 version:
 	@echo $(VERSION)
 
+# Bump version (patch by default)
+.PHONY:
+version-bump: 
+	@current_version=`cat VERSION`; \
+	major=`echo $$current_version | cut -d. -f1`; \
+	minor=`echo $$current_version | cut -d. -f2`; \
+	patch=`echo $$current_version | cut -d. -f3`; \
+	new_minor=$$((minor + 1)); \
+	new_version="$$major.$$new_minor.$$patch"; \
+	echo $$new_version > VERSION; \
+	echo "Version bumped from $$current_version to $$new_version"
+	$(MAKE) update-toml
+
 # Create a new version tag
 .PHONY: tag
-tag: version update-toml
+tag: version
 	git tag -a v$(VERSION) -m "Version $(VERSION)"
 	# git push origin v$(VERSION)
 
@@ -70,4 +83,4 @@ PHONY: run
 run:
 # 	go run -tags debug cmd/dcvix-stats/main.go --verbose --logfile examples/server.log ;
 # 	go run cmd/dcvix-stats/main.go --verbose --logfile examples/server.log ;
-	go run cmd/dcvix-stats/main.go --logfile examples/server.log ;
+	go run cmd/dcvix-stats/main.go --verbose --logfile examples/server.log ;
