@@ -28,6 +28,7 @@ func main() {
 	flag.BoolVar(&globals.Verbose, "verbose", false, "Enable verbose logging")
 	flag.IntVar(&globals.LogEntriesQty, "entries", 120, "How many last entries/minutes to evaluate (default 120)")
 	flag.StringVar(&globals.LogFile, "logfile", getDefaultLogPath(), "Path to the DCV server log file")
+	flag.IntVar(&globals.RefreshInterval, "refresh", 30, "Auto-refresh interval in seconds (default 30)")
 	flag.Parse()
 
 	if *showVersion {
@@ -36,7 +37,7 @@ func main() {
 	}
 
 	logger.LogVerbose("Starting log parser for file: %s\n", globals.LogFile)
-	logger.LogVerbose("Refreshing every 30 seconds...\n")
+	logger.LogVerbose("Refreshing every %v seconds...\n", globals.RefreshInterval)
 
 	// setup main window.
 	a := app.New()

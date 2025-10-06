@@ -40,3 +40,4 @@ var Metrics = []string{
 var LogFile string
 var LogEntriesQty = 120
 var Verbose = false
+var RefreshInterval = 30
