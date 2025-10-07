@@ -29,13 +29,44 @@ Preferred building environment Linux
 
 ### To be able to cross compile
 
-go install github.com/fyne-io/fyne-cross@latest
+* Ensure that Docker is installed and functioning properly.
+* `go install github.com/fyne-io/fyne-cross@latest`
 
 ### Build the application
 
-The project uses a `Makefile` to simplify common tasks:
+The project uses a `Makefile` to simplify common tasks,
+the build process will create an executables in the `dist` directory.
+
+### Build Linux and Windows binaries
 ```bash
 make build
 ```
-This will create an executable file in the `bin` directory.
 
+### Build only Linux or Windows binaries
+```bash
+make build-linux
+make build-windows-cross
+```
+
+### Run without building an executable (for testing changes)
+```bash
+make run
+```
+
+### RRun without building an executable, with Fyne containers and layouts highlighted (for testing GUI layout)
+```bash
+make run-debug
+```
+
+### Version bump
+Automatically raise the minor version number
+```bash
+make version-bump
+```
+To manually raise the version just edit the `VERSION` file
+
+### Create a version tag using info from the `VERSION` file (will update FyneApp.toml)
+```bash
+make tag
+```
+The tag will be ready to be pushed to GitHub, triggering automatic compilation and release creation.
