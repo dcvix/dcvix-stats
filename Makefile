@@ -23,23 +23,23 @@ LINUX_AMD64_DIR=$(WINDOWS_AMD64_DIR)
 
 # Build all platforms
 .PHONY: build
-build: update-toml generate build-linux build-windows-cross
+build: build-linux build-windows-cross
 
 # Build for Linux
 .PHONY: build-linux
-build-linux:
+build-linux: generate update-toml
 	mkdir -p $(LINUX_AMD64_DIR)
 	GOOS=linux GOARCH=amd64 $(GO) build -ldflags $(LDFLAGS) -o $(LINUX_AMD64_DIR)/$(BINARY_NAME) ./cmd/$(MAIN_NAME)
 
 # Build for Windows
 .PHONY: build-windows
-build-windows:
+build-windows: generate update-toml
 	mkdir -p $(WINDOWS_AMD64_DIR)
 	GOOS=windows GOARCH=amd64 $(GO) build -ldflags $(LDFLAGS) -o $(WINDOWS_AMD64_DIR)/$(WINDOWS_BINARY) ./cmd/$(MAIN_NAME)
 
 # Build for Windows cross compile
 .PHONY: build-windows-cross
-build-windows-cross:
+build-windows-cross: generate update-toml
 	GOFLAGS="-ldflags=$(LDFLAGS_WIN)" fyne-cross windows -arch=amd64 -icon=./assets/icon.png ./cmd/dcvix-stats
 	mv fyne-cross/bin/windows-amd64/$(WINDOWS_BINARY) $(LINUX_AMD64_DIR)/$(WINDOWS_BINARY)
 
