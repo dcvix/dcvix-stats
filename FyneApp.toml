@@ -4,7 +4,7 @@ Website = "https://github.com/dcvix/dcvix-stats"
   Icon = "Icon.png"
   Name = "dcvix-stats"
   ID = "net.cortassa.dcvix-stats"
-  Version = "1.0.0"
+  Version = "1.1.0"
   Build = 1
 
 [Migrations]

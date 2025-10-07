@@ -18,6 +18,15 @@ The Dcvix Stats accepts the following command-line flags:
 *   `--refresh`: Auto-refresh interval in seconds (default 30).
 
 
+## Download
+
+Download binaries for Linux or windows from [GitHub releases](https://github.com/dcvix/dcvix-stats/releases)
+
+## Installation
+No installation need.
+On linux make the binary executable (`chmod +x dcvix-stats`) and launch it.
+On windows just launch the `dcvix-stats.exe`
+
 ## Building
 
 Preferred building environment Linux
