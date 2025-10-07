@@ -26,9 +26,9 @@ func main() {
 
 	showVersion := flag.Bool("version", false, "Show version information")
 	flag.BoolVar(&globals.Verbose, "verbose", false, "Enable verbose logging")
-	flag.IntVar(&globals.LogEntriesQty, "entries", 120, "How many last entries/minutes to evaluate (default 120)")
+	flag.IntVar(&globals.LogEntriesQty, "entries", 120, "How many last entries/minutes to evaluate")
 	flag.StringVar(&globals.LogFile, "logfile", getDefaultLogPath(), "Path to the DCV server log file")
-	flag.IntVar(&globals.RefreshInterval, "refresh", 30, "Auto-refresh interval in seconds (default 30)")
+	flag.IntVar(&globals.RefreshInterval, "refresh", 30, "Auto-refresh interval in seconds")
 	flag.Parse()
 
 	if *showVersion {

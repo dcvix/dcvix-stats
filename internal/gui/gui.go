@@ -8,6 +8,7 @@ package gui
 import (
 	"fmt"
 	"net/url"
+	"os"
 	"time"
 
 	"fyne.io/fyne/v2"
@@ -15,7 +16,6 @@ import (
 	"fyne.io/fyne/v2/widget"
 
 	"github.com/dcvix/dcvix-stats/internal/globals"
-	"github.com/dcvix/dcvix-stats/internal/logger"
 	"github.com/dcvix/dcvix-stats/internal/logparser"
 	"github.com/dcvix/dcvix-stats/internal/version"
 )
@@ -82,23 +82,6 @@ func NewMainWindow(a fyne.App) fyne.Window {
 	// ## Main window setup
 	w.Resize(fyne.Size{Width: float32(WinWidth), Height: float32(WinHeigh)})
 
-	parser.ReadLogFile()
-
-	// res := parser.GetEntriesByMetric("quic_lost_packets")
-	// for _, entry := range res {
-	// 	fmt.Printf("*** %v %v\n", entry.Timestamp, entry.LastValue)
-	// }
-
-	values, timeStamps := parser.GetLatestData()
-	logger.LogVerbose("Timestamps (timeStamps): %v\n", timeStamps)
-	logger.LogVerbose("Timestamps (values): %v\n", values)
-
-	for i, metric := range globals.Metrics {
-		if i < len(values) && len(values[i]) > 0 {
-			logger.LogVerbose("%-25s(metric): %v\n", metric, values[i])
-		}
-	}
-
 	type graphConfig struct {
 		name             string
 		metrics          []string
@@ -154,8 +137,7 @@ func NewMainWindow(a fyne.App) fyne.Window {
 	graphContainers := make([]fyne.CanvasObject, 0, len(graphConfigs))
 
 	for _, config := range graphConfigs {
-		values, timeStamps := parser.GetEntriesByMetricList(config.metrics)
-		config.chartView = NewChartView(config.metrics, values, timeStamps)
+		config.chartView = NewChartView(config.metrics, nil, nil)
 		graphContainers = append(graphContainers, config.chartView)
 
 		config.menuItem = fyne.NewMenuItem(config.name, func() {
@@ -176,12 +158,18 @@ func NewMainWindow(a fyne.App) fyne.Window {
 
 	// Reload log file and redraw graphs
 	refresh := func() {
-		parser.ReadLogFile()
+		err := parser.ReadLogFile()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error, could not read log file: %s\n", globals.LogFile)
+			os.Exit(1)
+		}
+
 		for _, config := range graphConfigs {
 			values, timeStamps := parser.GetEntriesByMetricList(config.metrics)
 			config.chartView.RefreshData(values, timeStamps)
 		}
 	}
+	refresh()
 
 	// Auto refresh ticker
 	var autoRefreshTicker *time.Ticker
@@ -191,14 +179,13 @@ func NewMainWindow(a fyne.App) fyne.Window {
 		if autoRefreshTicker != nil {
 			return
 		}
-		autoRefreshTicker = time.NewTicker(30 * time.Second)
+		autoRefreshTicker = time.NewTicker(time.Duration(globals.RefreshInterval) * time.Second)
 		autoRefreshDone = make(chan bool)
 
 		go func() {
 			for {
 				select {
 				case <-autoRefreshTicker.C:
-					logger.LogVerbose("Refreshing\n")
 					refresh()
 				case <-autoRefreshDone:
 					return

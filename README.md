@@ -15,6 +15,7 @@ The Dcvix Stats accepts the following command-line flags:
 *   `--verbose`: Enable verbose logging.
 *   `--entries`: How many entries/minutes to evaluate (default 120).
 *   `--logfile`: Path to the DCV server log file.
+*   `--refresh`: Auto-refresh interval in seconds (default 30).
 
 
 ## Building

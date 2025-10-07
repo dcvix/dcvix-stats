@@ -5,7 +5,6 @@ package logparser
 
 import (
 	"bufio"
-	"fmt"
 	"os"
 	"regexp"
 	"strconv"
@@ -163,75 +162,4 @@ func (lp *LogParser) GetEntriesByMetricList(metrics []string) ([][]float64, []st
 	}
 
 	return values, timeStamps
-}
-
-func (lp *LogParser) GetLatestData() ([][]float64, []string) {
-	// Group entries by metric
-	metricEntries := make(map[string][]LogEntry)
-	for _, entry := range lp.entries {
-		metricEntries[entry.Metric] = append(metricEntries[entry.Metric], entry)
-	}
-
-	var values [][]float64
-	var timeStamps []string
-
-	for _, metric := range lp.metrics {
-		entries := metricEntries[metric]
-		if len(entries) == 0 {
-			continue
-		}
-
-		// Get last LogEntriesQty entries (or all if less than LogEntriesQty)
-		start := 0
-		if len(entries) > globals.LogEntriesQty {
-			start = len(entries) - globals.LogEntriesQty
-		}
-
-		var metricValues []float64
-		for i := start; i < len(entries); i++ {
-			metricValues = append(metricValues, entries[i].LastValue)
-
-			// Extract just the time part (HH:MM:SS) from timestamp
-			// timePart := strings.Split(entries[i].Timestamp, " ")[1]
-			timePart := entries[i].Timestamp
-
-			// Only add to timeStamps and timestamps for the first metric to avoid duplicates
-			if metric == lp.metrics[0] || len(timeStamps) < len(metricValues) {
-				if len(timeStamps) < len(metricValues) {
-					timeStamps = append(timeStamps, timePart)
-				}
-			}
-		}
-
-		if len(metricValues) > 0 {
-			values = append(values, metricValues)
-		}
-	}
-
-	return values, timeStamps
-}
-
-func (lp *LogParser) Run() ([][]float64, []string) {
-
-	var values [][]float64
-	var timeStamps []string
-	err := lp.ReadLogFile()
-	if err != nil {
-		fmt.Printf("Error reading log file: %v", err)
-	} else {
-		values, timeStamps := lp.GetLatestData()
-
-		logger.LogVerbose("\n=== Latest QUIC Stats (Last %d entries) ===\n", globals.LogEntriesQty)
-		logger.LogVerbose("Timestamps (timeStamps): %v\n", timeStamps)
-
-		for i, metric := range lp.metrics {
-			if i < len(values) && len(values[i]) > 0 {
-				logger.LogVerbose("%-25s(metric): %v\n", metric, values[i])
-			}
-		}
-		logger.LogVerbose("==========================================\n")
-	}
-
-	return values, timeStamps
-
 }
