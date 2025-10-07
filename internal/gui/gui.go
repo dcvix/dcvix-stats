@@ -1,7 +1,7 @@
 //  SPDX-FileCopyrightText: 2025 Diego Cortassa
 //  SPDX-License-Identifier: MIT
 
-//go:generate fyne bundle --package gui -o bundled.go  ../../assets/icon.png
+//go:generate fyne bundle --package gui -o bundled.go  ../../Icon.png
 
 package gui
 

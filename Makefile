@@ -23,13 +23,7 @@ LINUX_AMD64_DIR=$(WINDOWS_AMD64_DIR)
 
 # Build all platforms
 .PHONY: build
-build: update-toml build-linux build-windows-cross
-
-# update-toml
-.PHONY: update-toml
-update-toml:
-	sed -i "s/^  Version = \".*\"/  Version = \"$(VERSION)\"/" FyneApp.toml
-	sed -i "s/^  Build = .*/  Build = $(RELEASE)/" FyneApp.toml
+build: update-toml generate build-linux build-windows-cross
 
 # Build for Linux
 .PHONY: build-linux
@@ -49,6 +43,10 @@ build-windows-cross:
 	GOFLAGS="-ldflags=$(LDFLAGS_WIN)" fyne-cross windows -arch=amd64 -icon=./assets/icon.png ./cmd/dcvix-stats
 	mv fyne-cross/bin/windows-amd64/dcvix-stats.exe $(LINUX_AMD64_DIR)/$(WINDOWS_BINARY)
 
+PHONY: generate
+generate:
+	go generate internal/gui/gui.go ;
+
 # Show version
 .PHONY: version
 version:
@@ -66,6 +64,12 @@ version-bump:
 	echo $$new_version > VERSION; \
 	echo "Version bumped from $$current_version to $$new_version"
 	$(MAKE) update-toml
+
+# update-toml
+.PHONY: update-toml
+update-toml:
+	sed -i "s/^  Version = \".*\"/  Version = \"$(VERSION)\"/" FyneApp.toml
+	sed -i "s/^  Build = .*/  Build = $(RELEASE)/" FyneApp.toml
 
 # Create a new version tag
 .PHONY: tag

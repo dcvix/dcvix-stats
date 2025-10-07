@@ -1,5 +1,7 @@
+Website = "https://github.com/dcvix/dcvix-stats"
+
 [Details]
-  Icon = "./assets/icon.png"
+  Icon = "Icon.png"
   Name = "dcvix-stats"
   ID = "net.cortassa.dcvix-stats"
   Version = "1.0.0"
