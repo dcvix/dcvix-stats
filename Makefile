@@ -41,7 +41,7 @@ build-windows:
 .PHONY: build-windows-cross
 build-windows-cross:
 	GOFLAGS="-ldflags=$(LDFLAGS_WIN)" fyne-cross windows -arch=amd64 -icon=./assets/icon.png ./cmd/dcvix-stats
-	mv fyne-cross/bin/windows-amd64/dcvix-stats.exe $(LINUX_AMD64_DIR)/$(WINDOWS_BINARY)
+	mv fyne-cross/bin/windows-amd64/$(WINDOWS_BINARY) $(LINUX_AMD64_DIR)/$(WINDOWS_BINARY)
 
 PHONY: generate
 generate:
@@ -83,8 +83,10 @@ clean:
 	rm -rf dist
 	rm -rf fyne-cross
 
+PHONY: run-debug
+run-debug:
+	go run -tags debug cmd/$(MAIN_NAME)/main.go --verbose --logfile examples/server.log ;
+
 PHONY: run
 run:
-# 	go run -tags debug cmd/dcvix-stats/main.go --verbose --logfile examples/server.log ;
-# 	go run cmd/dcvix-stats/main.go --verbose --logfile examples/server.log ;
-	go run cmd/dcvix-stats/main.go --verbose --logfile examples/server.log ;
+	go run cmd/$(MAIN_NAME)/main.go --verbose --logfile examples/server.log ;
