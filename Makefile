@@ -75,18 +75,12 @@ update-toml:
 .PHONY: tag
 tag: version
 	git add VERSION FyneApp.toml
-	git commit -m "Version bump"
-	git tag -a v$(VERSION) -m "Version $(VERSION)"
-	# git push origin v$(VERSION)
-
-.PHONY: tag
-tag: version
-	git add VERSION FyneApp.toml
 	@if git diff --quiet --cached -- VERSION FyneApp.toml; then \
 		echo "VERSION and FyneApp.toml up to date, tagging"; \
 		git tag -a v$(VERSION) -m "Version $(VERSION)"; \
+		echo "Tagged, now push to GitHub: git push origin v$(VERSION); \
 	else \
-		echo "VERSION and FyneApp.toml need to be commited first"; \
+		echo "VERSION and FyneApp.toml need to be committed first"; \
 	fi
 
 PHONY: clean
