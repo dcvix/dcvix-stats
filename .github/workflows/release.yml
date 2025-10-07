@@ -42,13 +42,6 @@ jobs:
       - name: Downloads go modules dependencies
         run: go mod tidy
 
-      - name: Create source tarball
-        run: >-
-          tar -czf dcvix-stats-${{ env.VERSION }}.tar.gz
-          --transform "s,^,dcvix-stats-${{ env.VERSION }}/,"
-          assets cmd FyneApp.toml go.mod go.sum internal LICENSE.md
-          Makefile README.md VERSION
-
       - name: Build Linux binary
         run: make update-toml; make build-linux
 
