@@ -27,19 +27,19 @@ build: build-linux build-windows-cross
 
 # Build for Linux
 .PHONY: build-linux
-build-linux: generate update-toml
+build-linux: update-toml
 	mkdir -p $(LINUX_AMD64_DIR)
 	GOOS=linux GOARCH=amd64 $(GO) build -ldflags $(LDFLAGS) -o $(LINUX_AMD64_DIR)/$(BINARY_NAME) ./cmd/$(MAIN_NAME)
 
 # Build for Windows
 .PHONY: build-windows
-build-windows: generate update-toml
+build-windows: update-toml
 	mkdir -p $(WINDOWS_AMD64_DIR)
 	GOOS=windows GOARCH=amd64 $(GO) build -ldflags $(LDFLAGS) -o $(WINDOWS_AMD64_DIR)/$(WINDOWS_BINARY) ./cmd/$(MAIN_NAME)
 
 # Build for Windows cross compile
 .PHONY: build-windows-cross
-build-windows-cross: generate update-toml
+build-windows-cross: update-toml
 	GOFLAGS="-ldflags=$(LDFLAGS_WIN)" fyne-cross windows -arch=amd64 -icon=./assets/icon.png ./cmd/dcvix-stats
 	mv fyne-cross/bin/windows-amd64/$(WINDOWS_BINARY) $(LINUX_AMD64_DIR)/$(WINDOWS_BINARY)
 
@@ -74,6 +74,8 @@ update-toml:
 # Create a new version tag
 .PHONY: tag
 tag: version
+	git add VERSION FyneApp.toml
+	git commit -m "Version bump"
 	git tag -a v$(VERSION) -m "Version $(VERSION)"
 	# git push origin v$(VERSION)
 
