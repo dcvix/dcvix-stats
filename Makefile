@@ -79,6 +79,16 @@ tag: version
 	git tag -a v$(VERSION) -m "Version $(VERSION)"
 	# git push origin v$(VERSION)
 
+.PHONY: tag
+tag: version
+	git add VERSION FyneApp.toml
+	@if git diff --quiet --cached -- VERSION FyneApp.toml; then \
+		echo "VERSION and FyneApp.toml up to date, tagging"; \
+		git tag -a v$(VERSION) -m "Version $(VERSION)"; \
+	else \
+		echo "VERSION and FyneApp.toml need to be commited first"; \
+	fi
+
 PHONY: clean
 clean:
 	# go clean ;
