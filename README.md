@@ -24,8 +24,8 @@ Preferred building environment Linux
 
 ### Requirements
 
-*   Go 1.23 or later
-*   Fyne library dependencies installed 
+*   Go 1.23 or later, see GO [Download and install](https://go.dev/doc/install)
+*   Fyne library dependencies installed, see Fyne [Getting Started](https://docs.fyne.io/started/)
 
 ### To be able to cross compile
 
@@ -53,7 +53,7 @@ make build-windows-cross
 make run
 ```
 
-### RRun without building an executable, with Fyne containers and layouts highlighted (for testing GUI layout)
+### Run without building an executable, with Fyne containers and layouts highlighted (for testing GUI layout)
 ```bash
 make run-debug
 ```
