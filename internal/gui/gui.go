@@ -29,8 +29,9 @@ func NewMainWindow(a fyne.App) fyne.Window {
 
 	w := a.NewWindow(globals.AppName)
 
-	// Set App Icon
 	w.SetIcon(resourceIconPng)
+
+	prefs := a.Preferences()
 
 	// ## System Tray
 	// if desk, ok := a.(desktop.App); ok {
@@ -94,42 +95,42 @@ func NewMainWindow(a fyne.App) fyne.Window {
 		{
 			name:             "QUICLostPktsGraph",
 			metrics:          []string{"quic_lost_packets", "quic_lost_packets_avg"},
-			enabledByDefault: true,
+			enabledByDefault: prefs.BoolWithFallback("QUICLostPktsGraph", true),
 		},
 		{
 			name:             "QUICSentRecvPktsGraph",
 			metrics:          []string{"quic_sent_packets", "quic_sent_packets_avg", "quic_recv_packets", "quic_recv_packets_avg"},
-			enabledByDefault: true,
+			enabledByDefault: prefs.BoolWithFallback("QUICSentRecvPktsGraph", true),
 		},
 		{
 			name:             "QUICRttNanos",
 			metrics:          []string{"quic_rtt_nanos", "quic_rtt_nanos_avg"},
-			enabledByDefault: true,
+			enabledByDefault: prefs.BoolWithFallback("QUICRttNanos", true),
 		},
 		{
 			name:             "QUICCwndSize",
 			metrics:          []string{"quic_cwnd_size", "quic_cwnd_size_avg"},
-			enabledByDefault: true,
+			enabledByDefault: prefs.BoolWithFallback("QUICCwndSize", true),
 		},
 		{
 			name:             "QUICDeliveryRate",
 			metrics:          []string{"quic_delivery_rate", "quic_delivery_rate_avg"},
-			enabledByDefault: false,
+			enabledByDefault: prefs.BoolWithFallback("QUICDeliveryRate", false),
 		},
 		{
 			name:             "DGrams",
 			metrics:          []string{"dgram_sent", "dgram_sent_avg", "dgram_recv", "dgram_recv_avg"},
-			enabledByDefault: false,
+			enabledByDefault: prefs.BoolWithFallback("DGrams", false),
 		},
 		{
 			name:             "StreamsGraph",
 			metrics:          []string{"stream_sent", "stream_sent_avg", "stream_recv", "stream_recv_avg"},
-			enabledByDefault: false,
+			enabledByDefault: prefs.BoolWithFallback("StreamsGraph", false),
 		},
 		{
 			name:             "ActiveStreamsGraph",
 			metrics:          []string{"active_streams", "active_streams_avg"},
-			enabledByDefault: false,
+			enabledByDefault: prefs.BoolWithFallback("ActiveStreamsGraph", false),
 		},
 	}
 
@@ -144,8 +145,10 @@ func NewMainWindow(a fyne.App) fyne.Window {
 			config.menuItem.Checked = !config.menuItem.Checked
 			if config.menuItem.Checked {
 				config.chartView.Show()
+				prefs.SetBool(config.name, true)
 			} else {
 				config.chartView.Hide()
+				prefs.SetBool(config.name, false)
 			}
 			w.SetMainMenu(mainMenu)
 		})
@@ -204,13 +207,15 @@ func NewMainWindow(a fyne.App) fyne.Window {
 	}
 
 	autoRefreshItem := fyne.NewMenuItem("Auto Refresh", nil)
-	autoRefreshItem.Checked = false
+	autoRefreshItem.Checked = prefs.BoolWithFallback("AutoRefresh", false)
 	autoRefreshItem.Action = func() {
 		autoRefreshItem.Checked = !autoRefreshItem.Checked
 		if autoRefreshItem.Checked {
 			startAutoRefresh()
+			prefs.SetBool("AutoRefresh", true)
 		} else {
 			stopAutoRefresh()
+			prefs.SetBool("AutoRefresh", false)
 		}
 		w.SetMainMenu(mainMenu)
 	}

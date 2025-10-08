@@ -7,7 +7,7 @@ The application works by parsing a DCV server log file, extracting statistical d
 
 ![screenshot](assets/screenshot.png)
 
-### Command-line Flags
+## Command-line Flags
 
 The Dcvix Stats accepts the following command-line flags:
 
@@ -17,6 +17,10 @@ The Dcvix Stats accepts the following command-line flags:
 *   `--logfile`: Path to the DCV server log file.
 *   `--refresh`: Auto-refresh interval in seconds (default 30).
 
+## Preferences
+Preferences like auto refresh and opened graph will be saved to:
+- On linux `~/.config/fyne/net.cortassa.dcvix-stats/`
+- Om Windows `C:\Users\<user>\AppData\Local\net.cortassa.dcvix-stats\`
 
 ## Download
 

@@ -21,7 +21,7 @@ Website = "https://github.com/dcvix/dcvix-stats"
   HelperText = "This binary was built without debug symbols"
 
 [LinuxAndBSD]
-  GenericName = "dcvix  Stats"
+  GenericName = "dcvix Stats"
   Categories = ["System", "Monitor"]
   Comment = "Display statistics from a NICE DCV server log file."
   Keywords = ["DCV", "Monitor",  "Network", "Performance"]
