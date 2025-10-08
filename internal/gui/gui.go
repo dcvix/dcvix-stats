@@ -189,7 +189,7 @@ func NewMainWindow(a fyne.App) fyne.Window {
 			for {
 				select {
 				case <-autoRefreshTicker.C:
-					refresh()
+					fyne.Do(func() { refresh() })
 				case <-autoRefreshDone:
 					return
 				}
@@ -239,6 +239,10 @@ func NewMainWindow(a fyne.App) fyne.Window {
 
 	// Main container
 	w.SetContent(container.NewAdaptiveGrid(2, graphContainers...))
+
+	if prefs.BoolWithFallback("AutoRefresh", false) {
+		startAutoRefresh()
+	}
 
 	return w
 

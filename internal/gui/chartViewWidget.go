@@ -99,6 +99,7 @@ func (c *ChartView) RefreshData(values [][]float64, timeStamps []string) {
 	c.values = values
 	c.timeStamps = timeStamps
 	c.img.Image = c.GenerateChart(c.Size())
+	c.img.Refresh()
 }
 
 // needRerender checks if chart image needs to be re-rendered for new widget size
