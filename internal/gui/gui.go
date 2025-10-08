@@ -98,7 +98,7 @@ func NewMainWindow(a fyne.App) fyne.Window {
 		},
 		{
 			name:             "QUICSentRecvPktsGraph",
-			metrics:          []string{"quic_sent_packets_avg", "quic_recv_packets_avg"},
+			metrics:          []string{"quic_sent_packets", "quic_sent_packets_avg", "quic_recv_packets", "quic_recv_packets_avg"},
 			enabledByDefault: true,
 		},
 		{
@@ -123,12 +123,12 @@ func NewMainWindow(a fyne.App) fyne.Window {
 		},
 		{
 			name:             "StreamsGraph",
-			metrics:          []string{"active_streams", "stream_sent", "stream_recv"},
+			metrics:          []string{"stream_sent", "stream_sent_avg", "stream_recv", "stream_recv_avg"},
 			enabledByDefault: false,
 		},
 		{
 			name:             "ActiveStreamsGraph",
-			metrics:          []string{"active_streams"},
+			metrics:          []string{"active_streams", "active_streams_avg"},
 			enabledByDefault: false,
 		},
 	}
