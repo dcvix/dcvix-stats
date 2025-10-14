@@ -5,6 +5,8 @@ Dcvix Stats is a Go application that provides a graphical user interface (GUI) t
 
 The application works by parsing a DCV server log file, extracting statistical data using regular expressions, and then displaying this data in a series of line charts. The user can show or hide them from the "Show" menu.
 
+**Note** The DCV server writes statistics to the log file every minute, so the graph will update with new data once per minute. 
+
 ![screenshot](assets/screenshot.png)
 
 ## Command-line Flags
@@ -18,7 +20,7 @@ The Dcvix Stats accepts the following command-line flags:
 *   `--refresh`: Auto-refresh interval in seconds (default 30).
 
 ## Preferences
-Preferences like auto refresh and opened graph will be saved to:
+Preferences like auto refresh and opened graphs will be saved to:
 - On linux `~/.config/fyne/net.cortassa.dcvix-stats/`
 - Om Windows `C:\Users\<user>\AppData\Local\net.cortassa.dcvix-stats\`
 
@@ -27,9 +29,9 @@ Preferences like auto refresh and opened graph will be saved to:
 Download binaries for Linux or windows from [GitHub releases](https://github.com/dcvix/dcvix-stats/releases)
 
 ## Installation
-No installation need.
-On linux make the binary executable (`chmod +x dcvix-stats`) and launch it.
-On windows just launch the `dcvix-stats.exe`
+No installation needed, Just extract the archive.
+On linux launch `dcvix-stats`.
+On windows launch `dcvix-stats.exe`
 
 ## Building
 
@@ -44,6 +46,7 @@ Preferred building environment Linux
 
 * Ensure that Docker is installed and functioning properly.
 * `go install github.com/fyne-io/fyne-cross@latest`
+* `go install github.com/tc-hib/go-winres@latest`
 
 ### Build the application
 
