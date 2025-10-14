@@ -4,13 +4,19 @@
 package logger
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/dcvix/dcvix-stats/internal/globals"
 )
 
-func LogVerbose(format string, args ...interface{}) {
+func LogVerbose(v ...interface{}) {
 	if globals.Verbose {
-		fmt.Printf(" "+format, args...)
+		log.Println(v...)
+	}
+}
+
+func LogVerbosef(format string, v ...interface{}) {
+	if globals.Verbose {
+		log.Printf(format, v...)
 	}
 }

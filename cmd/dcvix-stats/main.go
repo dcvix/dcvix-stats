@@ -36,8 +36,8 @@ func main() {
 		os.Exit(0)
 	}
 
-	logger.LogVerbose("Starting log parser for file: %s\n", globals.LogFile)
-	logger.LogVerbose("Refreshing every %v seconds...\n", globals.RefreshInterval)
+	logger.LogVerbosef("Starting log parser for file: %s\n", globals.LogFile)
+	logger.LogVerbosef("Refreshing every %v seconds...\n", globals.RefreshInterval)
 
 	// setup main window.
 	a := app.NewWithID("net.cortassa.dcvix-stats")
