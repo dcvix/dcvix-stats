@@ -4,6 +4,7 @@
 package globals
 
 const AppName = "Dcvix DCV server stats"
+const AppID = "net.cortassa.dcvix-stats"
 
 var Metrics = []string{
 	"active_streams",

@@ -40,7 +40,7 @@ func main() {
 	logger.LogVerbosef("Refreshing every %v seconds...\n", globals.RefreshInterval)
 
 	// setup main window.
-	a := app.NewWithID("net.cortassa.dcvix-stats")
+	a := app.NewWithID(globals.AppID)
 	w := gui.NewMainWindow(a)
 	w.ShowAndRun()
 }
